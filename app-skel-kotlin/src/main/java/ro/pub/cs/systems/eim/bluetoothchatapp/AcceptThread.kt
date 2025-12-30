@@ -11,21 +11,23 @@ import java.io.IOException
 import java.util.UUID
 
 class AcceptThread(
-        private val mainActivity: MainActivity,
-        adapter: BluetoothAdapter,
-        uuid: UUID
+    private val mainActivity: MainActivity,
+    adapter: BluetoothAdapter,
+    uuid: UUID
 ) : Thread() {
 
     private var serverSocket: BluetoothServerSocket? = null
 
     init {
+        var tmp: BluetoothServerSocket? = null
         try {
             if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
-                serverSocket = adapter.listenUsingRfcommWithServiceRecord("BluetoothChatApp", uuid)
+                tmp = adapter.listenUsingRfcommWithServiceRecord("BluetoothChatApp", uuid)
             }
         } catch (e: IOException) {
-            Log.d("Accept->Constructor", "Failed to initialize server socket: ${e.message}")
+            Log.d("Accept->Constructor", e.toString())
         }
+        serverSocket = tmp
     }
 
     override fun run() {

@@ -12,18 +12,19 @@ import java.io.IOException
 import java.util.UUID
 
 class ConnectThread(
-        private val mainActivity: MainActivity,
-        private val bluetoothAdapter: BluetoothAdapter,
-        device: BluetoothDevice?,
-        uuid: UUID
+    private val mainActivity: MainActivity,
+    private val bluetoothAdapter: BluetoothAdapter,
+    device: BluetoothDevice,
+    uuid: UUID
 ) : Thread() {
 
     private var socket: BluetoothSocket? = null
 
     init {
         try {
-            if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
-                socket = device?.createRfcommSocketToServiceRecord(uuid)
+            if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
+            ) {
+                socket = device.createRfcommSocketToServiceRecord(uuid)
             }
         } catch (e: IOException) {
             Log.d("Connect->Constructor", e.toString())

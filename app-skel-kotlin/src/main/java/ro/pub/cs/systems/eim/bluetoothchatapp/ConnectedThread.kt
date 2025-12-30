@@ -11,27 +11,27 @@ import java.io.InputStream
 import java.io.OutputStream
 
 class ConnectedThread(
-        private val mainActivity: MainActivity,
-        private val socket: BluetoothSocket
+    private val mainActivity: MainActivity,
+    private val socket: BluetoothSocket
 ) : Thread() {
 
     private val inputStream: InputStream?
     private val outputStream: OutputStream?
 
-            init {
+    init {
         var tmpIn: InputStream? = null
         var tmpOut: OutputStream? = null
 
         try {
             tmpIn = socket.inputStream
         } catch (e: IOException) {
-            Log.d("Connected->Constructor", "Failed to get input stream: ${e.message}")
+            Log.d("Connected->Constructor", e.toString())
         }
 
         try {
             tmpOut = socket.outputStream
         } catch (e: IOException) {
-            Log.d("Connected->Constructor", "Failed to get output stream: ${e.message}")
+            Log.d("Connected->Constructor", e.toString())
         }
 
         inputStream = tmpIn
@@ -55,7 +55,7 @@ class ConnectedThread(
         while (true) {
             try {
                 bytes = inputStream?.read(buffer) ?: break
-                        val incomingMessage = String(buffer, 0, bytes)
+                val incomingMessage = String(buffer, 0, bytes)
                 mainActivity.runOnUiThread {
                     mainActivity.addChatMessage("$remoteDeviceName: $incomingMessage")
                 }
@@ -75,7 +75,7 @@ class ConnectedThread(
             mainActivity.runOnUiThread {
                 Toast.makeText(mainActivity, "Failed to send message.", Toast.LENGTH_SHORT).show()
             }
-            Log.d("Connected->Write", "Failed to write to output stream: ${e.message}")
+            Log.d("Connected->Write", e.toString())
         }
     }
 
@@ -83,7 +83,7 @@ class ConnectedThread(
         try {
             socket.close()
         } catch (e: IOException) {
-            Log.d("Connected->Cancel", "Failed to close socket: ${e.message}")
+            Log.d("Connected->Cancel", e.toString())
         }
     }
 }
